@@ -2,97 +2,138 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Smart Resume Builder</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ResumePro AI – Smart Resume Review</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
-body{background:#0f172a;color:#e5e7eb}
-header{padding:80px 20px;text-align:center}
-header h1{font-size:48px;color:#38bdf8}
-header p{margin-top:15px;font-size:18px;color:#cbd5f5}
-
-.btn{margin-top:30px;padding:15px 35px;background:#38bdf8;color:#0f172a;
-border:none;border-radius:8px;font-size:16px;cursor:pointer}
-
-section{padding:80px 20px;max-width:1100px;margin:auto}
-h2{text-align:center;font-size:36px;margin-bottom:40px}
-
-.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px}
-.card{background:#020617;padding:30px;border-radius:12px}
-.card h3{margin-bottom:15px;color:#38bdf8}
-
-.upload-box{background:#020617;padding:40px;border-radius:12px;text-align:center}
-input{margin-top:20px}
-
-.pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px}
-.price-card{background:#020617;padding:30px;border-radius:12px;text-align:center}
-.price-card h3{color:#38bdf8}
-.price{font-size:32px;margin:20px 0}
-
-footer{text-align:center;padding:40px;color:#64748b}
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:#fff;
+  margin:0;
+  padding:0;
+}
+.container {
+  max-width:900px;
+  margin:auto;
+  padding:30px;
+}
+.card {
+  background:#111;
+  border-radius:12px;
+  padding:25px;
+  margin-bottom:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+h1,h2 {
+  text-align:center;
+}
+input, button {
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+  font-size:16px;
+}
+button {
+  background:#00c6ff;
+  color:#000;
+  cursor:pointer;
+  font-weight:bold;
+}
+button:hover {
+  background:#00f2fe;
+}
+#preview {
+  background:#fff;
+  color:#000;
+  padding:20px;
+  border-radius:8px;
+  margin-top:15px;
+  display:none;
+}
+.lock {
+  text-align:center;
+  opacity:0.8;
+}
+.hidden {
+  display:none;
+}
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<header>
-<h1>ResumePro AI</h1>
-<p>Get instant, professional resume feedback that helps you get hired faster</p>
-<button class="btn">Upload Resume</button>
-</header>
+<h1>Smart Resume Builder</h1>
+<p style="text-align:center">Upload → Improve → Download (Premium)</p>
 
-<section>
-<h2>Why ResumePro AI?</h2>
-<div class="features">
+<!-- UPLOAD -->
 <div class="card">
-<h3>AI Resume Review</h3>
-<p>Instant feedback on structure, skills, and impact.</p>
+  <h2>1️⃣ Upload Resume</h2>
+  <input type="file" id="fileInput" accept=".txt,.pdf,.doc,.docx">
+  <button onclick="handleUpload()">Upload & Preview</button>
 </div>
+
+<!-- PREVIEW -->
 <div class="card">
-<h3>ATS Optimization</h3>
-<p>Improve keyword matching for ATS systems.</p>
+  <h2>2️⃣ Resume Preview</h2>
+  <div id="preview"></div>
 </div>
-<div class="card">
-<h3>Recruiter-Level Insights</h3>
-<p>Know exactly what recruiters notice.</p>
-</div>
-</div>
-</section>
 
-<section>
-<h2>Upload Your Resume</h2>
-<div class="upload-box">
-<p>PDF or DOCX supported</p>
-<input type="file">
-<p style="margin-top:15px;color:#64748b">(AI analysis coming soon)</p>
+<!-- LOCKED -->
+<div class="card lock">
+  <h2>🔒 Premium Features</h2>
+  <p>AI Resume Rewrite • ATS Optimization • PDF Download</p>
+  <button onclick="unlock()">Subscribe ₹99</button>
 </div>
-</section>
 
-<section>
-<h2>Simple Pricing</h2>
-<div class="pricing">
-<div class="price-card">
-<h3>Free</h3>
-<p class="price">₹0</p>
-<p>Basic feedback</p>
+<!-- UNLOCKED -->
+<div class="card hidden" id="premium">
+  <h2>✅ Premium Unlocked</h2>
+  <button onclick="improve()">Improve Resume (AI)</button>
+  <button onclick="download()">Download Resume</button>
 </div>
-<div class="price-card">
-<h3>Pro</h3>
-<p class="price">₹199</p>
-<p>Detailed AI review + ATS score</p>
-</div>
-<div class="price-card">
-<h3>Premium</h3>
-<p class="price">₹399</p>
-<p>Resume rewrite suggestions</p>
-</div>
-</div>
-</section>
 
-<footer>
-<p>© 2025 ResumePro AI. All rights reserved.</p>
-</footer>
+</div>
+
+<script>
+let resumeText = "";
+
+function handleUpload() {
+  const file = document.getElementById("fileInput").files[0];
+  if (!file) {
+    alert("Please upload a resume file");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    resumeText = e.target.result;
+    document.getElementById("preview").style.display = "block";
+    document.getElementById("preview").innerText = resumeText.substring(0,3000);
+  };
+  reader.readAsText(file);
+}
+
+function unlock() {
+  alert("Payment simulated ✅ Premium unlocked");
+  document.getElementById("premium").classList.remove("hidden");
+}
+
+function improve() {
+  resumeText = resumeText + "\n\n[AI Improved Content Added]";
+  document.getElementById("preview").innerText = resumeText.substring(0,3000);
+}
+
+function download() {
+  const blob = new Blob([resumeText], {type:"text/plain"});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "Improved_Resume.txt";
+  link.click();
+}
+</script>
 
 </body>
 </html>
